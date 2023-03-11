@@ -1,9 +1,5 @@
 .env
-.venv
 .venv/
-res
 res/
-docs
 docs/
-Attendance
 Attendance/

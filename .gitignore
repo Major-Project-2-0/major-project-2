@@ -1,5 +1,6 @@
 .env
-.venv/
+venv/
 res/
 docs/
 Attendance/
+static/

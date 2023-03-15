@@ -4,6 +4,7 @@ which consists of flash web app and Face Recognition System using KNN classifier
 
 """
 import os
+import time
 from datetime import date
 from datetime import datetime
 from flask import Flask,request,render_template
@@ -12,6 +13,9 @@ from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 import cv2
 import joblib
+import warnings
+
+warnings.filterwarnings("ignore",category=DeprecationWarning)
 
 #### Defining Flask App
 app = Flask(__name__)
@@ -123,6 +127,7 @@ def home():
     return render_template('home.html',studentcount=studentcount,names=names,rolls=rolls,times=times,subname=subname,classtype=classtype,facultyname=facultyname,schdtime=schdtime,l=l,totalreg=totalreg(),datetoday2=datetoday2) 
 
 
+#### This function runs when we click on TAKE ATTENDANCE LINK
 @app.route('/start',methods=['GET','POST'])
 def start():
     if 'face_recognition_model.pkl' not in os.listdir('static'):
@@ -133,32 +138,34 @@ def start():
     facultyname = request.form.get('facultyname')
     schdtime = request.form.get('schdtime')
 
-    i=1
-    cap = cv2.VideoCapture(0)
-    ret = True
-    while ret:
-        ret,frame = cap.read()
-        if extract_faces(frame)!=():
-            (x,y,w,h) = extract_faces(frame)[0]
-            cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
-            face = cv2.resize(frame[y:y+h,x:x+w], (50, 50))
-            identified_person = identify_face(face.reshape(1,-1))[0]
-            add_attendance(name=identified_person,studentcount=i,subname=subname,classtype=classtype,facultyname=facultyname,schdtime=schdtime)
-            i=i+1
-            cv2.putText(frame,f'{identified_person}',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
-        cv2.imshow('Attendance',frame)
-        if cv2.waitKey(1)==27:
-            break
-    cap.release()
-    cv2.destroyAllWindows()
+    if subname is not None and classtype is not None and facultyname is not None and schdtime is not None:
+        i=1
+        cap = cv2.VideoCapture(0)
+        ret = True
+        while ret:
+            ret,frame = cap.read()
+            time.sleep(2)
+            if extract_faces(frame)!=[]:
+                (x,y,w,h) = extract_faces(frame)[0]
+                cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
+                face = cv2.resize(frame[y:y+h,x:x+w], (50, 50))
+                identified_person = identify_face(face.reshape(1,-1))[0]
+                add_attendance(name=identified_person,studentcount=i,subname=subname,classtype=classtype,facultyname=facultyname,schdtime=schdtime)
+                i=i+1
+                cv2.putText(frame,f'{identified_person}',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
+            cv2.imshow('Attendance',frame)
+            if cv2.waitKey(1)==27:
+                break
+        cap.release()
+        cv2.destroyAllWindows()
     studentcount,names,rolls,times,subname,classtype,facultyname,schdtime,l = extract_attendance()    
-    return render_template('home.html',studentcount=studentcount,names=names,rolls=rolls,times=times,subname=subname,classtype=classtype,facultyname=facultyname,schdtime=schdtime,l=l,totalreg=totalreg(),datetoday2=datetoday2) 
+    return render_template('home.html',studentcount=studentcount,names=names,rolls=rolls,times=times,subname=subname,classtype=classtype,facultyname=facultyname,schdtime=schdtime,l=l,totalreg=totalreg(),datetoday2=datetoday2)
 
 #### This function will run when we add a new user
 @app.route('/add',methods=['GET','POST'])
 def add():
-    newusername = request.form.get['newusername']
-    newuserid = request.form.get['newuserid']
+    newusername = request.form.get('newusername')
+    newuserid = request.form.get('newuserid')
     userimagefolder = 'static/faces/'+newusername+'_'+str(newuserid)
     if not os.path.isdir(userimagefolder):
         os.makedirs(userimagefolder)
@@ -167,19 +174,20 @@ def add():
     while 1:
         _,frame = cap.read()
         faces = extract_faces(frame)
-        for (x,y,w,h) in faces:
-            cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
-            cv2.putText(frame,f'Images Captured: {i}/50',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
-            if j%10==0:
-                name = newusername+'_'+str(i)+'.jpg'
-                cv2.imwrite(userimagefolder+'/'+name,frame[y:y+h,x:x+w])
-                i+=1
-            j+=1
-        if j==500:
-            break
-        cv2.imshow('Adding new User',frame)
-        if cv2.waitKey(1)==27:
-            break
+        if faces is not None:
+            for (x,y,w,h) in faces:
+                cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
+                cv2.putText(frame,f'Images Captured: {i}/50',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
+                if j%10==0:
+                    name = newusername+'_'+str(i)+'.jpg'
+                    cv2.imwrite(userimagefolder+'/'+name,frame[y:y+h,x:x+w])
+                    i+=1
+                j+=1
+            if j==500:
+                break
+            cv2.imshow('Adding new User',frame)
+            if cv2.waitKey(1)==27:
+                break
     cap.release()
     cv2.destroyAllWindows()
     print('Training Model')

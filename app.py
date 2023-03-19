@@ -111,7 +111,6 @@ def add_attendance(name, studentcount, subname, classtype, facultyname, schdtime
     userclasstype = classtype
     userfaculty = facultyname
     userschdtime = schdtime
-    
     df = pd.read_csv(f'Attendance/Attendance-{datetoday}.csv')
     if int(userid) not in list(df['Enrollment']):
         with open(f'Attendance/Attendance-{datetoday}.csv','a', encoding="UTF-8") as f:

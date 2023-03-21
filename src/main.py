@@ -114,7 +114,7 @@ def startRecognition():
     ret = True
     while ret:
         ret,frame = cap.read()
-        if extract_faces(frame)!=[]:
+        if extract_faces(frame)!= ():
             (x,y,w,h) = extract_faces(frame)[0]
             cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
             face = cv2.resize(frame[y:y+h,x:x+w], (50, 50))
@@ -122,7 +122,7 @@ def startRecognition():
             identified_person_name = identified_person.split('_')[0]
             identified_person_id = identified_person.split('_')[1]
 
-            #Add attendance functionality starts here
+            # Add attendance functionality starts here
             cv2.putText(frame,f'{identified_person}',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
             current__time = datetime.now().strftime('%H:%M:%S')
             if(recognized__students__list.count(identified_person_id)==0):
@@ -131,7 +131,7 @@ def startRecognition():
                     f.write(f'\n{i},{identified_person_name},{identified_person_id},{current__time},{sub__name},{cls__type},{faculty__name},{cls__time}')
                 print('%s - %s' % (identified_person,"marked PRESENT"))
                 i=i+1
-            #Add attendance functionality ends here
+            # Add attendance functionality ends here
             
         cv2.imshow('Attendance',frame)
         if cv2.waitKey(1)==27:
@@ -148,12 +148,12 @@ def init():
             TrainFromWebcam()
             
         elif user=='2':
-            try:
-                startRecognition()
-            except Exception:
-                break
-            finally:
-                init()
+            # try:
+            startRecognition()
+            # except Exception:
+            #     break
+            # finally:
+            #     init()
     
         elif user=='3':
             if 'face-recognition-model.pkl' in os.listdir(savedStaticLocation):

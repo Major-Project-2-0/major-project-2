@@ -1,4 +1,6 @@
-Major Project 2: Smart Attendance System v2.0
+Major Project 2: 
+Smart Attendance System v2.0
+
 Steps to install:
 1. Using the Requirements.txt file, generate a python virtual environment.
 2. Activate the environment and run 'app.py' for web interface or 'src/main.py' for commandline interface

@@ -1,44 +1,6 @@
 <!doctype html>
 <html lang="en">
 
-<style type='text/css'>
-    * {
-        padding: 0;
-        margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-
-    body {
-        background-image: url('https://th.bing.com/th/id/R.eba2c1c2c0d54733e4436f8111e415fe?rik=c11TPZ1XFfM86A&riu=http%3a%2f%2fclipground.com%2fimages%2ffree-website-background-clipart-18.jpg&ehk=x3i92978bfAWHIScxbF%2fRVdRcQbN73HiAmR2T2ltg4g%3d&risl=&pid=ImgRaw&r=0');
-        background-size: cover;
-        font-family: sans-serif;
-        margin-top: 40px;
-        height: 100vh;
-        padding: 0;
-        margin: 0;
-    }
-
-    table {
-        border: 1px;
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 86%;
-        margin: auto;
-    }
-
-    td,
-    th {
-        border: 1px solid black !important;
-        padding: 5px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-</style>
-
-
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -46,133 +8,149 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <style>
+        body{
+            background-color: whitesmoke;
+        }
+        .shade{
+            background-color: aliceblue;
+        }
+        .curvy-lines {
+            margin: 50px auto;
+            width: 800px;
+            height: 350px;
+        }
+    </style>
     <title>Face Recognition Based Attendance System</title>
 </head>
 
 <body>
 
-    <div class='mt-3 text-center'>
-        <h1 style="width: auto;margin: auto;color: black;padding: 11px;font-size: 32px;opacity: 0.8;">Smart Attendance System</h1>
+    <div class="container-fluid text-center mb-5">
+        <h1 class="heading-1">Smart Attendance System</h1>
     </div>
 
     {% if mess %}
-    <p class="text-center" style="color: red;font-size: 20px;">{{ mess }}</p>
+    <p class="lead my-4">{{ mess }}</p>
     {% endif %}
 
-    <div class="row text-center" style="padding: 20px;margin: 20px;">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-sm-3">
+                <form id="add-user-form" class="form border p-2 shade" action="/add" method="POST">
+                    <h4 class="heading-4 text-center">Add New User <i class="material-icons">control_point_duplicate</i></h4>
+                    <hr class="hr">
 
-        <div class="col-sm-8"
-            style="border-radius: 20px;padding: 0px;background-color:rgb(211,211,211,0.5);margin:0px 10px 10px 10px;min-height: 400px;">
-            <h2 style="border-radius: 20px 20px 0px 0px;background-color: #0b4c61;color: white;padding: 10px;">Today's
-                Attendance <i class="material-icons">assignment</i></h2>
-            <a style="text-decoration: none;max-width: 300px;" href="/start" id="takeAttendance">
-                <button
-                    style="font-size: 24px;font-weight: bold;border-radius: 10px;width:490px;padding: 10px;margin-top: 30px;margin-bottom: 30px;"
-                    type='submit' class='btn btn-primary'>Take Attendance <i
-                        class="material-icons">beenhere</i></button>
-            </a>
-            <table style="background-color: white;">
-                <tr>
-                    <td><b>#</b></td>
-                    <td><b>Student-count</b></td>
-                    <td><b>Name</b></td>
-                    <td><b>Enrollment-No</b></td>
-                    <td><b>Time-Stamp</b></td>
-                    <td><b>Subject-name</b></td>
-                    <td><b>Class-type</b></td>
-                    <td><b>Faculty-name</b></td>
-                    <td><b>Class Scheduled Time</b></td>
-                </tr>
-                {% if l %}
+                    <div class="form-group mb-2">
+                        <label for="username-input" class="form-label">User Name</label>
+                        <input type="text" id="username-input" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="userid-input" class="form-label">User ID</label>
+                        <input type="number" id="userid-input" name="userid" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-dark my-2">Add New User</button>
+                    <hr class="hr">
+                    <p class="my-2">Total Users in Database: {{totalreg}}</p>
+                </form>
 
-                {% for i in range(l) %}
-                <tr>
-                    <td>{{ i+1 }}</td>
-                    <td>{{ studentcount[i] }}</td>
-                    <td>{{ names[i] }}</td>
-                    <td>{{ rolls[i] }}</td>
-                    <td>{{ times[i] }}</td>
-                    <td>{{ subname[i] }}</td>
-                    <td>{{ classtype[i] }}</td>
-                    <td>{{ facultyname[i] }}</td>
-                    <td>{{ schdtime[i] }}</td>
-                </tr>
-                {% endfor %}
-                {% endif %}
-            </table>
 
+            </div>
+            <div class="col-sm-9 border p-2 shade">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="heading-3">Today's
+                            Attendance <i class="material-icons">assignment</i></h2>
+                    </div>
+                    <div class="col">
+                        <a href="/start" id="takeAttendance">
+                            <button type='submit' class='btn btn-outline-success'>Take Attendance</button>
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped border border-2 table-hover p-2 m-2 bg-light">
+                        <thead>
+                            <tr>
+                                <td><b>#</b></td>
+                                <td><b>Student-count</b></td>
+                                <td><b>Name</b></td>
+                                <td><b>Enrollment-No</b></td>
+                                <td><b>Time-Stamp</b></td>
+                                <td><b>Subject-name</b></td>
+                                <td><b>Class-type</b></td>
+                                <td><b>Faculty-name</b></td>
+                                <td><b>Class Scheduled Time</b></td>
+                            </tr>
+                        </thead>
+                        {% if l %}
+                        <tbody>
+                            {% for i in range(l) %}
+                            <tr>
+                                <td>{{ i+1 }}</td>
+                                <td>{{ studentcount[i] }}</td>
+                                <td>{{ names[i] }}</td>
+                                <td>{{ rolls[i] }}</td>
+                                <td>{{ times[i] }}</td>
+                                <td>{{ subname[i] }}</td>
+                                <td>{{ classtype[i] }}</td>
+                                <td>{{ facultyname[i] }}</td>
+                                <td>{{ schdtime[i] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
         </div>
-
-        <div class="col-sm-3"
-            style="border-radius: 20px;padding: 0px;background-color:rgb(211,211,211,0.5);margin:0px 10px 10px 10px;height: 400px;">
-            <form action='/add' method="POST" enctype="multipart/form-data">
-                <h2 style="border-radius: 20px 20px 0px 0px;background-color: #0b4c61;color: white;padding: 10px;">Add
-                    New User <i class="material-icons">control_point_duplicate</i></h2>
-                <label style="font-size: 20px;"><b>Enter New User Name*</b></label>
-                <br>
-                <input type="text" id="newusername" name='newusername'
-                    style="font-size: 20px;margin-top:10px;margin-bottom:10px;" required>
-                <br>
-                <label style="font-size: 20px;"><b>Enter New User Id*</b></label>
-                <br>
-                <input type="number" id="newusereid" name='newuserid'
-                    style="font-size: 20px;margin-top:10px;margin-bottom:10px;" required>
-                <br>
-                <button style="width: 232px;margin-top: 20px;font-size: 20px;" type='submit' class='btn btn-dark'>Add
-                    New User
-                </button>
-                <br>
-                <h5 style="padding: 25px;"><i>Total Users in Database: {{totalreg}}</i></h5>
-            </form>
-        </div>
-
+    </div>
+    <div class="curvy-lines">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+            <path d="M0,350 C200,400 600,200 800,250" stroke="#8ac5c5" stroke-width="10" fill="none" />
+            <path d="M0,400 C200,450 600,250 800,300" stroke="#6d8ea6" stroke-width="10" fill="none" />
+        </svg>
     </div>
 
 
+
     <script>
-		$(document).ready(function() {
-			$('#takeAttendance').click(function() {
-				var subname = prompt('Enter Subject-Name: ');
+        $(document).ready(function () {
+            $('#takeAttendance').click(function () {
+                var subname = prompt('Enter Subject-Name: ');
                 var classtype = prompt('Is it a Lecture, Tutorial or Lab? ');
                 var facultyname = prompt("Who is the Faculty? ");
                 var schdtime = prompt("What is the Scheduled Time of Class? ")
-				if (subname !== null && classtype !== null && facultyname !== null && schdtime !== null) {
-					$.ajax({
-						type: 'POST',
-						url: '/start',
-						data: {subname: subname,
+                if (subname !== null && classtype !== null && facultyname !== null && schdtime !== null) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/start',
+                        data: {
+                            subname: subname,
                             classtype: classtype,
                             facultyname: facultyname,
-                            schdtime: schdtime},
-						success: function(response) {
-							alert(response);
-						},
-						error: function(xhr, status, error) {
-							console.log('Error:', error);
-						}
-					});
-				}
-			});
-		});
-	</script>
-    <script>
-		// $(document).ready(function() {
-		// 	$('#takeAttendance').click(function(e) {
-		// 		e.preventDefault();
-		// 		var subname = prompt('Enter Subject-Name: ');
-        //         var classtype = prompt('Is it a Lecture, Tutorial or Lab? ');
-        //         var facultyname = prompt("Who is the Faculty? ");
-        //         var schdtime = prompt("What is the Scheduled Time of Class? ")
-		// 		if (subname !== null && classtype !== null && facultyname !== null && schdtime !== null) {
-		// 			window.location.href = '/process_input?subname=' + subname + '&classtype=' + classtype + '&facultyname=' + facultyname + '&schdtime=' + schdtime;
-		// 		}
-		// 	});
-		// });
-	</script>
+                            schdtime: schdtime
+                        },
+                        success: function (response) {
+                            alert(response);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Error:', error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

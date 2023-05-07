@@ -39,8 +39,8 @@
     <div class="container text-center">
         <div class="row">
             <div class="col-sm-3">
-                <form id="add-user-form" class="form border p-2 shade" action="/add" method="POST">
-                    <h4 class="heading-4 text-center">Add New User <i class="material-icons">control_point_duplicate</i></h4>
+                <form id="add-user-form" class="form border p-2 shade" action="/add" method="GET">
+                    <h4 class="heading-4 text-center">Create User</h4>
                     <hr class="hr">
 
                     <div class="form-group mb-2">
@@ -59,16 +59,31 @@
 
             </div>
             <div class="col-sm-9 border p-2 shade">
+                
                 <div class="row">
-                    <div class="col">
-                        <h2 class="heading-3">Today's
-                            Attendance <i class="material-icons">assignment</i></h2>
-                    </div>
-                    <div class="col">
-                        <a href="/start" id="takeAttendance">
-                            <button type='submit' class='btn btn-outline-success'>Take Attendance</button>
-                        </a>
-                    </div>
+                    <form id="add-details-form" class="form" action="/start" method="GET">
+                        <h4 class="heading-4 text-center">Add Details</h4>
+                        <hr class="hr">
+    
+                        <div class="form-group mb-2">
+                            <label class="form-label">Subject Name: </label>
+                            <input type="text" name="subname" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label">Class Type [lecture,Tutorial,Lab]: </label>
+                            <input type="text" name="classtype" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label">Faculty Name: </label>
+                            <input type="text" name="facultyname" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label">Scheduled DateTime: </label>
+                            <input type="text" name="schdtime" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark my-2">Take Attendance</button>
+                        <hr class="hr">
+                    </form>    
                 </div>
 
 
@@ -118,36 +133,7 @@
 
 
 
-    <script>
-        $(document).ready(function () {
-            $('#takeAttendance').click(function () {
-                var subname = prompt('Enter Subject-Name: ');
-                var classtype = prompt('Is it a Lecture, Tutorial or Lab? ');
-                var facultyname = prompt("Who is the Faculty? ");
-                var schdtime = prompt("What is the Scheduled Time of Class? ")
-                if (subname !== null && classtype !== null && facultyname !== null && schdtime !== null) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/start',
-                        data: {
-                            subname: subname,
-                            classtype: classtype,
-                            facultyname: facultyname,
-                            schdtime: schdtime
-                        },
-                        success: function (response) {
-                            alert(response);
-                        },
-                        error: function (xhr, status, error) {
-                            console.log('Error:', error);
-                        }
-                    });
-                }
-            });
-        });
-    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>

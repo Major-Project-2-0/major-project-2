@@ -131,11 +131,14 @@ def home():
 def start():
     if 'face_recognition_model.pkl' not in os.listdir('static'):
         return render_template('home.html',totalreg=totalreg(),datetoday2=datetoday2,mess='There is no trained model in the static folder. Please add a new face to continue.')
-
-    subname = request.form.get('subname')
-    classtype = request.form.get('classtype')
-    facultyname = request.form.get('facultyname')
-    schdtime = request.form.get('schdtime')
+    subname = request.args.get('subname')
+    classtype = request.args.get('classtype')
+    facultyname = request.args.get('facultyname')
+    schdtime = request.args.get('schdtime')
+    print("schdtime: "+schdtime)
+    print("facultyname: "+facultyname)
+    print("classtype: "+classtype)
+    print("subname: "+subname)
 
     if subname is not None and classtype is not None and facultyname is not None and schdtime is not None:
         i=1
@@ -143,7 +146,6 @@ def start():
         ret = True
         while ret:
             ret,frame = cap.read()
-            time.sleep(2)
             if extract_faces(frame)!=[]:
                 (x,y,w,h) = extract_faces(frame)[0]
                 cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
@@ -163,8 +165,10 @@ def start():
 #### This function will run when we add a new user
 @app.route('/add',methods=['GET','POST'])
 def add():
-    newusername = request.form.get('newusername')
-    newuserid = request.form.get('newuserid')
+    newusername = request.args.get('username')
+    newuserid = request.args.get('userid')
+    print("userid: "+newuserid)
+    print("username: "+newusername)
     userimagefolder = 'static/faces/'+newusername+'_'+str(newuserid)
     if not os.path.isdir(userimagefolder):
         os.makedirs(userimagefolder)
